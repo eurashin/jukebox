@@ -2,9 +2,8 @@
     var users = $.ajax({url:"url"})
 } */
 
-var testUsers = ["Alex","Logan","Eura","Chase"];
 
-function createTable(){
+function createTable(testUsers){
     var table = document.getElementById('userTable');  
 
     for(let i = 0; i < testUsers.length; i++){
