@@ -1,10 +1,12 @@
 .main{
+    background:forestgreen;
     text-align: center;
 }
 
 #tagline{
     font-family: "Raleway", sans-serif;
 }
+
 
 #anchorDown{
     color: gold;
@@ -40,22 +42,19 @@
     left: 25%;
     top: 45%;
     width: 50%;
+
+
     text-align: center;
-    opacity:1;
-    transition: left 2s ease-in-out;
-    transition-delay: 1s;
-    transition-duration: 2s;
-  
+    font-size: 18px;
 }
 
-.joinSessionButton{
-    padding: .75em;
+#joinSession{
+    padding: .5em;
     margin: 0;
-    
 }
 
-.hostSessionButton{
-    padding: .75em;
+#hostSession{
+    padding: .5em;
     margin: 0;
 }
 

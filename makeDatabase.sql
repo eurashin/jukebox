@@ -5,24 +5,20 @@ USE jukend;
 /*entities*/
 CREATE TABLE user
 (
-    userURI VARCHAR(20) NOT NULL PRIMARY KEY, 
-    userName VARCHAR(20) NOT NULL
+    user_uri VARCHAR(20) NOT NULL PRIMARY KEY, 
+    user_name VARCHAR(20) NOT NULL
 );
-LOAD DATA LOCAL INFILE 'users.txt'
-INTO TABLE user
-FIELDS TERMINATED BY ',';
-
 
 CREATE TABLE jam 
 	(
 	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	host VARCHAR(20) NOT NULL,
-    FOREIGN KEY (host) REFERENCES user(userURI)
+    FOREIGN KEY (host) REFERENCES user(user_uri)
 	);
 
 CREATE TABLE song
 	(
-	URI VARCHAR(20) PRIMARY KEY NOT NULL,
+	uri VARCHAR(20) PRIMARY KEY NOT NULL,
 	title VARCHAR(20),
 	artist VARCHAR(20)
 	);
@@ -30,19 +26,19 @@ CREATE TABLE song
 /*relationships*/
 CREATE TABLE joins
 (
-    hostURI VARCHAR(20) NOT NULL, 
-    userURI VARCHAR(20) NOT NULL, 
-    PRIMARY KEY (hostURI, userURI), 
-    FOREIGN KEY (userURI) REFERENCES user(userURI), 
-    FOREIGN KEY (hostURI) REFERENCES jam(host)
+    host_uri VARCHAR(20) NOT NULL, 
+    user_uri VARCHAR(20) NOT NULL, 
+    PRIMARY KEY (host_uri, user_uri), 
+    FOREIGN KEY (user_uri) REFERENCES user(user_uri), 
+    FOREIGN KEY (host_uri) REFERENCES jam(host)
 );
 
 CREATE TABLE stores
 (
-    userURI VARCHAR(20) NOT NULL, 
-    sURI VARCHAR(20) NOT NULL, 
-    PRIMARY KEY (userURI, sURI), 
+    user_uri VARCHAR(20) NOT NULL, 
+    s_uri VARCHAR(20) NOT NULL, 
+    PRIMARY KEY (user_uri, s_uri), 
     
-    FOREIGN KEY (sURI) REFERENCES song(URI), 
-    FOREIGN KEY (userURI) REFERENCES user(userURI)
+    FOREIGN KEY (s_uri) REFERENCES song(uri), 
+    FOREIGN KEY (user_uri) REFERENCES user(user_uri)
 );

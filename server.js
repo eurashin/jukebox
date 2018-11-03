@@ -1,5 +1,4 @@
-//LINK BETWEEN DATABASE AND WEBAPP 
-
+//LINK BETWEEN DATABASE AND WEBAPP
 var mysql = require('mysql')
 var express = require('express');
 var app = express();
@@ -12,65 +11,200 @@ var connection = mysql.createConnection({
     database : 'jukend'
 });
 
+var request = require('request');
+var cors = require('cors');
+var querystring = require('querystring');
+var cookieParser = require('cookie-parser');
+
+var SpotifyWebApi = require('spotify-web-api-node');
+var client_id = '690951f82905419d8342d9f33e3e6227'; // Your client id
+var client_secret = 'bd8f410b044a4f16a17151c7d1c57601'; // Your secret
+var redirect_uri = 'http://localhost:8080/callback'; // Your redirect uri
+
+/**
+ * Generates a random string containing numbers and letters
+ * @param  {number} length The length of the string
+ * @return {string} The generated string
+ */
+var generateRandomString = function(length) {
+  var text = '';
+  var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  for (var i = 0; i < length; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+};
+
+var stateKey = 'spotify_auth_state';
+
 /************ START OUR APP ************/
 // set the port of our application
 // process.env.PORT lets the port be set by Heroku
 var port = process.env.PORT || 8080;
 
+/************ SPOTIFY WEBAPI WRAPPER SETUP ************/
+var spotify_auth = "";
+var access_token = "";
+
+var spotifyApi = new SpotifyWebApi({
+	clientId: client_id,
+	clientSecret: client_secret,
+	redirectUri: redirect_uri
+});
+
 // set the view engine to ejs
 app.set('view engine', 'ejs');
 
 // make express look in the public directory for assets (css/js/img)
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/public')).use(cors()).use(cookieParser());
 
 // set the home page route
 app.get('/', function(req, res) {
     res.render('index');
 });
 
+app.get('/loggedin', function(req, res) {
+	// set access token
+	spotifyApi.setAccessToken(access_token);
+
+	// get user and pass relevant information
+	spotifyApi.getMe().then(function(data) {
+		res.render('realFrontPage', { access_token: access_token, name: data.body.display_name });
+	}).catch(function(err) {
+		console.log("Something went wrong", err.message);
+	})
+});
+/************** UPDATE THE DATABASE **********/
+
 
 /********** SESSION FUNCTIONS *************/
 //called when "start a session" button is pressed
 //input: userURI
-app.get('/:userURI/create', function(req,res){
+app.post('/create', function(req,res){
     //start a session in the database
     connection.connect();
-    connection.query("INSERT INTO jam(host) VALUES (" + req.params.userURI + ")"); //make session
-    //add user to session
-    connection.query("INSERT INTO joins(host, userURI) VALUES (" + req.params.userURI + "," + req.params.userURI + ")");
-    connection.query('SELECT userName AS name FROM user WHERE userURI = ' + req.params.userURI, function(err, rows, fields) { //
-        if (err) throw err; 
-        send(rows[0].name);  
+    connection.query("INSERT INTO jam(host) VALUES ('" + req.headers.useruri + "')"); //make session
+    connection.query("SELECT user_name AS name FROM user WHERE user_uri = '" + req.headers.useruri + "'", function(err, rows, fields) { //
+        if (err) throw err;
+        //handle rendering the temp page by ID
+        var link = '/' + req.headers.useruri + '/join'; 
+        res.render('session_page', {sessionLink: link, users: rows}); 
+        connection.end(); 
     });
 
-    //handle rendering the temp page by ID
-    var link = '/' + req.params.userURI + '/join'; 
-    var users = [rows[0].name];
-    res.render('sessionPage', {sessionLink: link, users = users}); 
-
-    connection.end(); 
 });
 
 //called when "join a session" button is pressed
-app.post('/:hostURI/join', function(req, res) {
+app.post('/join', function(req, res) {
     connection.connect();
     //add user to session
-    connection.query("INSERT INTO joins(host, userURI) VALUES (" + req.params.hostURI + "," + req.headers.userURI + ")");
+    connection.query("INSERT INTO joins(host_uri, user_uri) VALUES ('" + req.headers.hosturi + "','" + req.headers.useruri + "')");
     
     //handle rendering the temp page by ID
-    var link = '/' + req.params.hostURI + '/join'; 
-    connection.query('SELECT userName FROM users,joins WHERE ' + req.params.userURI, function(err, rows, fields) { //
-        if (err) throw err; 
-        send(rows[0].name);  
+    var link = '/' + req.headers.hosturi + '/join'; 
+    //select all the users in session
+    connection.query("SELECT DISTINCT user_name FROM user,joins,jam WHERE jam.host ='" +  req.headers.hosturi + 
+            "' AND user.user_uri = joins.user_uri", function(err, rows, fields) { 
+        if (err) throw err;
+        var other_users = rows; 
+        //select the host user 
+        connection.query("SELECT user_name AS name FROM user WHERE user_uri = '" + req.headers.hosturi + "'", function(err, rows, fields) { //
+            if (err) throw err; 
+            var host = rows;
+            res.render('session_page', {sessionLink: link, users: host.concat(other_users)}); 
+            connection.end();     
+        });
     });
     
-    res.render('sessionPage', {sessionLink: link, users = users}); 
-    connection.end();     
 });
 
-app.post('/:userURI/destroy', function(req,res){
+app.post('/destroy', function(req,res){
 
-};)
+});
+
+// spotify authentication verification
+// upon clicking login button redirect to prompt user for authorization
+app.get('/login', function(req, res) {
+
+  var state = generateRandomString(16);
+  res.cookie(stateKey, state);
+
+  // your application requests authorization
+  var scope = 'user-read-private user-read-email user-top-read';
+  res.redirect('https://accounts.spotify.com/authorize?' +
+    querystring.stringify({
+      response_type: 'code',
+      client_id: client_id,
+      scope: scope,
+      redirect_uri: redirect_uri,
+      state: state
+    }));
+});
+
+// receive the response and establish authentication code global variable
+app.get('/callback', function(req, res) {
+
+	// your application requests refresh and access tokens
+     // after checking the state parameter
+
+     spotify_auth = req.query.code || null;
+	console.log(spotify_auth);
+     var state = req.query.state || null;
+     var storedState = req.cookies ? req.cookies[stateKey] : null;
+
+     if (state === null || state !== storedState) {
+       res.redirect('/#' +
+         querystring.stringify({
+           error: 'state_mismatch'
+         }));
+     } else {
+       res.clearCookie(stateKey);
+       var authOptions = {
+         url: 'https://accounts.spotify.com/api/token',
+         form: {
+           code: spotify_auth,
+           redirect_uri: redirect_uri,
+           grant_type: 'authorization_code'
+         },
+         headers: {
+           'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+         },
+         json: true
+       };
+
+       request.post(authOptions, function(error, response, body) {
+         if (!error && response.statusCode === 200) {
+
+           access_token = body.access_token;
+           var refresh_token = body.refresh_token;
+
+           var options = {
+             url: 'https://api.spotify.com/v1/me',
+             headers: { 'Authorization': 'Bearer ' + access_token },
+             json: true,
+           };
+
+           // use the access token to access the Spotify Web API
+           request.get(options, function(error, response, body) {
+             console.log(body);
+           });
+
+           // we can also pass the token to the browser to make requests from there
+           res.redirect('/loggedin#' +
+             querystring.stringify({
+               access_token: access_token,
+               refresh_token: refresh_token,
+             }));
+         } else {
+           res.redirect('/#' +
+             querystring.stringify({
+               error: 'invalid_token'
+             }));
+         }
+       });
+     }
+});
 
 app.listen(port, function() {
     console.log('Our app is running on http://localhost:' + port);
