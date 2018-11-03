@@ -8,10 +8,6 @@ CREATE TABLE user
     user_uri VARCHAR(20) NOT NULL PRIMARY KEY, 
     user_name VARCHAR(20) NOT NULL
 );
-LOAD DATA LOCAL INFILE 'users.txt'
-INTO TABLE user
-FIELDS TERMINATED BY ',';
-
 
 CREATE TABLE jam 
 	(
