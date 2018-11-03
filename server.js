@@ -89,8 +89,7 @@ app.post('/create', function(req,res){
         if (err) throw err;
         //handle rendering the temp page by ID
         var link = '/' + req.headers.useruri + '/join'; 
-        //res.render('sessionPage', {sessionLink: link, users: users}); 
-        res.send(rows);
+        res.render('session_page', {sessionLink: link, users: rows}); 
         connection.end(); 
     });
 
@@ -113,18 +112,14 @@ app.post('/join', function(req, res) {
         connection.query("SELECT user_name AS name FROM user WHERE user_uri = '" + req.headers.hosturi + "'", function(err, rows, fields) { //
             if (err) throw err; 
             var host = rows;
-            console.log(host);
-            console.log(other_users);
-            console.log(link);
-//            res.render('sessionPage', {sessionLink: link, users: users}); 
-            res.send(host.concat(other_users));
+            res.render('session_page', {sessionLink: link, users: host.concat(other_users)}); 
             connection.end();     
         });
     });
     
 });
 
-app.post('/:userURI/destroy', function(req,res){
+app.post('/destroy', function(req,res){
 
 });
 
