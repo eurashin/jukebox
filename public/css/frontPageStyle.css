@@ -6,6 +6,10 @@
     font-family: "Raleway", sans-serif;
 }
 
+#anchorDown{
+    color: gold;
+}
+
 #buttonBackground{ position: fixed;
     left: 25%;
     top: 45%;
@@ -13,12 +17,28 @@
    height: 25%;
     text-align: center;
     background-color: antiquewhite; 
-    opacity: .3;}
+    opacity: .5;}
+
+    button {
+        background-color: rgb(172, 66, 5);
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        width: 40%;
+        
+    }
+    
+    button:hover {
+        background-color: rgb(172, 82, 30);
+    }
+    
 
 #frontPageButton{
     position: fixed;
     left: 25%;
-    top: 50%;
+    top: 45%;
     width: 50%;
     text-align: center;
     opacity:1;
@@ -40,12 +60,13 @@
 }
 
 body {
-    background-image: url('pictures/frontPagePic.jpg');
+    background-image: url('img/frontPagePic.jpg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
     background-attachment: fixed;
 }
+
 
 #buttonBackground:hover{
     left: 0%;
