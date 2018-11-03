@@ -15,7 +15,9 @@ app.use(express.static(__dirname + '/public'));
 
 // set the home page route
 app.get('/', function(req, res) {
-    res.render('index');  /*INSERT YOUR FILENAME HERE*/
+    res.render('session_page');  /*INSERT YOUR FILENAME HERE*/
 });
 
-
+app.listen(port, function() {
+    console.log('Our app is running on http://localhost:' + port);
+});
