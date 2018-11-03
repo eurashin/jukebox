@@ -89,7 +89,7 @@ app.post('/create', function(req,res){
         if (err) throw err;
         //handle rendering the temp page by ID
         var link = '/' + req.headers.useruri + '/join'; 
-        res.render('session_page', {sessionLink: link, users:rows}); //makes the webpage
+        res.render('session_page', {link: link, users:rows}); //makes the webpage
         connection.end(); 
     });
 
@@ -112,7 +112,7 @@ app.post('/join', function(req, res) {
         connection.query("SELECT user_name AS name FROM user WHERE user_uri = '" + req.headers.hosturi + "'", function(err, rows, fields) { //
             if (err) throw err; 
             var host = rows;
-            res.render('session_page', {sessionLink: link, users:host.concat(other_users)}); 
+            res.render('session_page', {link: link, users:host.concat(other_users)}); 
             connection.end();     
         });
     });
