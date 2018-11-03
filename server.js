@@ -31,40 +31,47 @@ app.get('/', function(req, res) {
 /********** SESSION FUNCTIONS *************/
 //called when "start a session" button is pressed
 //input: userURI
-app.get('/:userURI/create', function(req,res){
+app.post('/create', function(req,res){
     //start a session in the database
     connection.connect();
-    connection.query("INSERT INTO jam(host) VALUES (" + req.params.userURI + ")"); //make session
-    //add user to session
-    connection.query("INSERT INTO joins(host, userURI) VALUES (" + req.params.userURI + "," + req.params.userURI + ")");
-    connection.query('SELECT userName AS name FROM user WHERE userURI = ' + req.params.userURI, function(err, rows, fields) { //
-        if (err) throw err; 
-        send(rows[0].name);  
+    connection.query("INSERT INTO jam(host) VALUES ('" + req.headers.useruri + "')"); //make session
+    connection.query("SELECT user_name AS name FROM user WHERE user_uri = '" + req.headers.useruri + "'", function(err, rows, fields) { //
+        if (err) throw err;
+        //handle rendering the temp page by ID
+        var link = '/' + req.headers.useruri + '/join'; 
+        //res.render('sessionPage', {sessionLink: link, users: users}); 
+        res.send(rows);
+        connection.end(); 
     });
 
-    //handle rendering the temp page by ID
-    var link = '/' + req.params.userURI + '/join'; 
-    var users = [rows[0].name];
-    res.render('sessionPage', {sessionLink: link, users: users}); 
-
-    connection.end(); 
 });
 
 //called when "join a session" button is pressed
-app.post('/:hostURI/join', function(req, res) {
+app.post('/join', function(req, res) {
     connection.connect();
     //add user to session
-    connection.query("INSERT INTO joins(host, userURI) VALUES (" + req.params.hostURI + "," + req.headers.userURI + ")");
+    connection.query("INSERT INTO joins(host_uri, user_uri) VALUES ('" + req.headers.hosturi + "','" + req.headers.useruri + "')");
     
     //handle rendering the temp page by ID
-    var link = '/' + req.params.hostURI + '/join'; 
-    connection.query('SELECT DISTINCT userName FROM user,joins WHERE user.userURI = joins.userURI' + req.params.userURI, function(err, rows, fields) { //
-        if (err) throw err; 
-        send(rows[0].name);  
+    var link = '/' + req.headers.hosturi + '/join'; 
+    //select all the users in session
+    connection.query("SELECT DISTINCT user_name FROM user,joins,jam WHERE jam.host ='" +  req.headers.hosturi + 
+            "' AND user.user_uri = joins.user_uri", function(err, rows, fields) { 
+        if (err) throw err;
+        var other_users = rows; 
+        //select the host user 
+        connection.query("SELECT user_name AS name FROM user WHERE user_uri = '" + req.headers.hosturi + "'", function(err, rows, fields) { //
+            if (err) throw err; 
+            var host = rows;
+            console.log(host);
+            console.log(other_users);
+            console.log(link);
+//            res.render('sessionPage', {sessionLink: link, users: users}); 
+            res.send(host.concat(other_users));
+            connection.end();     
+        });
     });
     
-    res.render('sessionPage', {sessionLink: link, users: users}); 
-    connection.end();     
 });
 
 app.post('/:userURI/destroy', function(req,res){
