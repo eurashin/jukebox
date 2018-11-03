@@ -69,7 +69,7 @@ app.post('/:hostURI/join', function(req, res) {
 });
 
 app.post('/:userURI/destroy', function(req,res){
-
+    
 };)
 
 app.listen(port, function() {
