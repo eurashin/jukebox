@@ -22,6 +22,10 @@
     width: 50%;
     text-align: center;
     opacity:1;
+    transition: left 2s ease-in-out;
+    transition-delay: 1s;
+    transition-duration: 2s;
+  
 }
 
 .joinSessionButton{
@@ -41,4 +45,8 @@ body {
     background-position: center;
     background-size: cover;
     background-attachment: fixed;
+}
+
+#buttonBackground:hover{
+    left: 0%;
 }
