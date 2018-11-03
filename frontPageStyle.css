@@ -1,0 +1,27 @@
+.main{
+    background:forestgreen;
+    text-align: center;
+}
+
+#tagline{
+    font-family: "Raleway", sans-serif;
+}
+
+.frontPageButton{
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+}
+
+#joinSession{
+    padding: .5em;
+    margin: 0;
+}
+
+#hostSession{
+    padding: .5em;
+    margin: 0;
+}
