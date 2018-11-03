@@ -1,0 +1,44 @@
+.main{
+    text-align: center;
+}
+
+#tagline{
+    font-family: "Raleway", sans-serif;
+}
+
+#buttonBackground{ position: fixed;
+    left: 25%;
+    top: 45%;
+    width: 50%;
+   height: 25%;
+    text-align: center;
+    background-color: antiquewhite; 
+    opacity: .3;}
+
+#frontPageButton{
+    position: fixed;
+    left: 25%;
+    top: 50%;
+    width: 50%;
+    text-align: center;
+    opacity:1;
+}
+
+.joinSessionButton{
+    padding: .75em;
+    margin: 0;
+    
+}
+
+.hostSessionButton{
+    padding: .75em;
+    margin: 0;
+}
+
+body {
+    background-image: url('pictures/frontPagePic.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+}
