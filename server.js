@@ -34,10 +34,11 @@ app.get('/', function(req, res) {
 /********** SESSION FUNCTIONS *************/
 //called when "start a session" button is pressed
 //input: userURI
-app.get('/:userURI', function(req,res){
+app.get('/:userURI/create', function(req,res){
     //start a session in the database
     connection.connect();
     connection.query("INSERT INTO jam(host) VALUES (" + req.params.userURI + ")");
+    res.send("MADE");
     //handle rendering the temp page by ID
 //    res.setHeader('Content-Type', 'application/json');
 //    res.send(JSON.stringify({ a: 1 }));
