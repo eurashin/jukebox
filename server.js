@@ -28,8 +28,6 @@ app.get('/', function(req, res) {
     res.render('index');
 });
 
-/************** UPDATE THE DATABASE **********/
-
 
 /********** SESSION FUNCTIONS *************/
 //called when "start a session" button is pressed
@@ -59,15 +57,20 @@ app.post('/:hostURI/join', function(req, res) {
     //add user to session
     connection.query("INSERT INTO joins(host, userURI) VALUES (" + req.params.hostURI + "," + req.headers.userURI + ")");
     
+    //handle rendering the temp page by ID
+    var link = '/' + req.params.hostURI + '/join'; 
+    connection.query('SELECT userName FROM users ' + req.params.userURI, function(err, rows, fields) { //
+        if (err) throw err; 
+        send(rows[0].name);  
+    });
+    
+    res.render('sessionPage', {sessionLink: link, users = users}); 
     connection.end();     
 });
 
 app.post('/:userURI/destroy', function(req,res){
 
 };)
-
-
-
 
 app.listen(port, function() {
     console.log('Our app is running on http://localhost:' + port);
