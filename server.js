@@ -37,17 +37,34 @@ app.get('/', function(req, res) {
 app.get('/:userURI/create', function(req,res){
     //start a session in the database
     connection.connect();
-    connection.query("INSERT INTO jam(host) VALUES (" + req.params.userURI + ")");
-    res.send("MADE");
+    connection.query("INSERT INTO jam(host) VALUES (" + req.params.userURI + ")"); //make session
+    //add user to session
+    connection.query("INSERT INTO joins(host, userURI) VALUES (" + req.params.userURI + "," + req.params.userURI + ")");
+    connection.query('SELECT userName AS name FROM user WHERE userURI = ' + req.params.userURI, function(err, rows, fields) { //
+        if (err) throw err; 
+        send(rows[0].name);  
+    });
+
     //handle rendering the temp page by ID
-//    res.setHeader('Content-Type', 'application/json');
-//    res.send(JSON.stringify({ a: 1 }));
+    var link = '/' + req.params.userURI + '/join'; 
+    var users = [rows[0].name];
+    res.render('sessionPage', {sessionLink: link, users = users}); 
+
+    connection.end(); 
 });
 
+//called when "join a session" button is pressed
+app.post('/:hostURI/join', function(req, res) {
+    connection.connect();
+    //add user to session
+    connection.query("INSERT INTO joins(host, userURI) VALUES (" + req.params.hostURI + "," + req.headers.userURI + ")");
+    
+    connection.end();     
+});
 
 app.post('/:userURI/destroy', function(req,res){
-    // remove page from db
-});
+
+};)
 
 
 

@@ -1,9 +1,12 @@
-USE jukend; 
+DROP DATABASE jukend; 
+CREATE DATABASE jukend;
+USE jukend;
 
 /*entities*/
 CREATE TABLE user
 (
-    userURI VARCHAR(20) NOT NULL PRIMARY KEY
+    userURI VARCHAR(20) NOT NULL PRIMARY KEY, 
+    userName VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE jam 
@@ -23,11 +26,11 @@ CREATE TABLE song
 /*relationships*/
 CREATE TABLE joins
 (
-    jid INT NOT NULL, 
+    hostURI VARCHAR(20) NOT NULL, 
     userURI VARCHAR(20) NOT NULL, 
-    PRIMARY KEY (jid, userURI), 
+    PRIMARY KEY (hostURI, userURI), 
     FOREIGN KEY (userURI) REFERENCES user(userURI), 
-    FOREIGN KEY (jid) REFERENCES jam(id)
+    FOREIGN KEY (hostURI) REFERENCES jam(host)
 );
 
 CREATE TABLE stores
