@@ -1,6 +1,5 @@
 //LINK BETWEEN DATABASE AND WEBAPP 
-
-var mysql = require('mysql')
+var mysql = require('mysql');
 var express = require('express');
 var app = express();
 
@@ -46,7 +45,7 @@ app.get('/:userURI/create', function(req,res){
     //handle rendering the temp page by ID
     var link = '/' + req.params.userURI + '/join'; 
     var users = [rows[0].name];
-    res.render('sessionPage', {sessionLink: link, users = users}); 
+    res.render('sessionPage', {sessionLink: link, users: users}); 
 
     connection.end(); 
 });
@@ -64,13 +63,13 @@ app.post('/:hostURI/join', function(req, res) {
         send(rows[0].name);  
     });
     
-    res.render('sessionPage', {sessionLink: link, users = users}); 
+    res.render('sessionPage', {sessionLink: link, users: users}); 
     connection.end();     
 });
 
 app.post('/:userURI/destroy', function(req,res){
     
-};)
+});
 
 app.listen(port, function() {
     console.log('Our app is running on http://localhost:' + port);
