@@ -59,7 +59,7 @@ app.post('/:hostURI/join', function(req, res) {
     
     //handle rendering the temp page by ID
     var link = '/' + req.params.hostURI + '/join'; 
-    connection.query('SELECT userName FROM users ' + req.params.userURI, function(err, rows, fields) { //
+    connection.query('SELECT userName FROM users,joins WHERE ' + req.params.userURI, function(err, rows, fields) { //
         if (err) throw err; 
         send(rows[0].name);  
     });
