@@ -1,0 +1,33 @@
+body {
+    background-image: url('');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.url_display {
+    position: fixed;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background-color: orangered;
+    color:white;
+}
+
+.myTabDiv {
+    position: fixed;
+    top: 50%;
+    left: 25%;
+    transform: translate(-50%, -50%);
+
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+
+#startButton {
+    position: fixed;
+    top: 50%;
+    left:75%;
+    transform: translate(-50%, -50%);
+}

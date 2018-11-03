@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Session Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--custom files-->
+    <link rel="stylesheet" href="css/session_page.css">
+    <script src="js/session_page_main.js"></script>
+    
+    <!--jQuery & jQueryUI--> 
+    <script src="js/jquery-3.3.1.min.js"></script>
+</head>
+
+<style>
+    body,h1 {font-family: "Raleway", sans-serif}
+    body, html {height: 100%}
+</style>
+
+<body onload= "createTable();">
+
+    <div class="url_display">
+       Your URL is: hi.com
+    </div>
+
+    <div class="myTabDiv">
+        <table id="userTable" style="width:100%">
+        <tr>
+            <th>Users in session</th>
+        </tr>
+        <tr style="text-align:right">
+        </table>
+    </div>
+
+    <div class="buttons">
+        <div id="startButton">
+        <button type="submit"> Start </button>
+        </div>
+    </div>
+
+    
+</body>
+</html>
