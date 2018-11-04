@@ -102,21 +102,15 @@ body {
 
 .url_display {
     position: fixed;
-    top: 25%;
+    top: 28%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: lightblue;
-    color:white;
     padding: 14px 40px;
-    border-radius: 8px;
-    transition-duration: 0.4s;
-    border: 2px solid black;
-    font-size: 20px;
 }
 
 .myTabDiv {
     position: fixed;
-    top: 50%;
+    top: 40%;
     left: 35%;
     transform: translate(-50%, -50%);
     border-collapse: collapse;
@@ -125,7 +119,9 @@ body {
 
 #startButton {
     position: fixed;
-    top: 50%;
+    top: 45%;
     left:65%;
-    transform: translate(-50%, -50%);
+    width: 28%;
+    height: 20%;
+    transform: translate(-25%, -50%);
 }
