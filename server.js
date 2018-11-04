@@ -70,7 +70,7 @@ app.get('/loggedin', function(req, res) {
 
 	// get user and pass relevant information
 	spotifyApi.getMe().then(function(data) {
-		res.render('realFrontPage', { name: data.body.display_name , user_uri:data.body.uri});
+		res.render('realFrontPage', { name: data.body.display_name , user_uri:String(data.body.uri)});
 	}).catch(function(err) {
 		console.log("Something went wrong", err.message);
 	})
