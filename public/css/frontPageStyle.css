@@ -8,6 +8,15 @@ body{
     font-weight:bold;
 }
 
+
+#spotify{
+    width:230px; 
+    position:fixed; 
+    bottom:50px; 
+    left:70px;
+    z-index:-5;
+}
+
 #tagline{
     font-family: "Raleway", sans-serif;
 }

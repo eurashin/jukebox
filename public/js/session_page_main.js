@@ -4,11 +4,12 @@
 
 
 function createTable(testUsers){
+    var users= [].concat(testUsers);
     var table = document.getElementById('userTable');  
-
-    for(let i = 0; i < testUsers.length; i++){
+    console.log(users); 
+    for(let i = 0; i < users.length; i++){
         var row = table.insertRow(i+1);
         var cell = row.insertCell(0);
-        cell.innerHTML = testUsers[i];
+        cell.innerHTML = users[i];
     }
 }

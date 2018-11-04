@@ -96,15 +96,19 @@ app.get('/loggedin', function(req, res) {
 //called when "start a session" button is pressed
 //input: userURI
 app.get('/create', function(req,res){
+    //generate random string
+    var randString = generateRandomString(5);
+    var link = 'https://jukebox-node-8080.herokuapp.com/join/' + randString;
     //start a session in the database
-    connection.query("INSERT IGNORE INTO jam(host) VALUES ('" + req.headers.useruri + "')"); //make session
-    connection.query("SELECT user_name AS name FROM user WHERE user_uri = '" + req.headers.useruri + "'", function(err, rows, fields) { //
+    connection.query("INSERT INTO jam(uniqueLink, host) VALUES ('" + link + "','" + req.headers.useruri + "')"); //make session
+    connection.query("SELECT user_name FROM user WHERE user_uri = '" + req.headers.useruri + "'", function(err, rows, fields) { //
         if (err) throw err;
 
         //handle rendering the temp page by ID
-        var link = '/' + req.headers.useruri + '/join';
-        console.log("HEY");
-        res.render("session_page", {link: link, users:rows}); //makes the webpage
+        console.log(req.headers.useruri);
+        var users = [].concat([rows[0].user_name]);
+        console.log(users);
+        res.render("session_page", {link: link, users:users}); //makes the webpage
     });
 
 });
@@ -121,9 +125,9 @@ app.post('/join/:hosturi', function(req, res) {
         if (err) throw err;
         var other_users = rows; 
         //select the host user 
-        connection.query("SELECT user_name AS name FROM user WHERE user_uri = '" + req.params.hosturi + "'", function(err, rows, fields) { //
+        connection.query("SELECT user_name FROM user WHERE user_uri = '" + req.params.hosturi + "'", function(err, rows, fields) { //
             if (err) throw err; 
-            var host = rows;
+            var host = rows[0].user_name;
             res.render('session_page', {link: link, users:host.concat(other_users)});
         });
     });
