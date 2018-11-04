@@ -1,5 +1,5 @@
 function createJam(userUri) {
-    var website = "https://jukebox-node-8080.herokuapp.com/create";
+    var website = "http://jukebox-node-8080.herokuapp.com/create";
   //  var website = "http://localhost:8080/create";
     $.ajaxSetup({
         headers: {
