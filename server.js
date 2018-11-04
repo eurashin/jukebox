@@ -95,23 +95,22 @@ app.get('/loggedin', function(req, res) {
 /********** SESSION FUNCTIONS *************/
 //called when "start a session" button is pressed
 //input: userURI
-app.post('/create', function(req,res){
+app.get('/create', function(req,res){
     //start a session in the database
-    connection.connect();
     connection.query("INSERT INTO jam(host) VALUES ('" + req.headers.useruri + "')"); //make session
     connection.query("SELECT user_name AS name FROM user WHERE user_uri = '" + req.headers.useruri + "'", function(err, rows, fields) { //
         if (err) throw err;
+
         //handle rendering the temp page by ID
         var link = '/' + req.headers.useruri + '/join';
-        res.render('session_page', {link: link, users:rows}); //makes the webpage
-        connection.end(); 
+        console.log("HEY");
+        res.render("session_page", {link: link, users:rows}); //makes the webpage
     });
 
 });
 
 //called when "join a session" button is pressed
 app.post('/join/:hosturi', function(req, res) {
-    connection.connect();
     //add user to session
     connection.query("INSERT INTO joins(host_uri, user_uri) VALUES ('" + req.params.hosturi + "','" + req.headers.useruri + "')");
     //handle rendering the temp page by ID
@@ -125,15 +124,14 @@ app.post('/join/:hosturi', function(req, res) {
         connection.query("SELECT user_name AS name FROM user WHERE user_uri = '" + req.params.hosturi + "'", function(err, rows, fields) { //
             if (err) throw err; 
             var host = rows;
-
             res.render('session_page', {link: link, users:host.concat(other_users)});
-            connection.end();
         });
     });
 
 });
 
 app.post('/destroy', function(req,res){
+    connection.end();
 
 });
 
