@@ -79,7 +79,7 @@ app.get('/loggedin', function(req, res) {
 		connection.query("INSERT IGNORE INTO user(user_uri, user_name, user_id) VALUES ('" + user_uri + "','"
 			+ name + "','" + user_id + "')");
 
-		spotifyApi.getMyTopTracks({limit: 50})
+		spotifyApi.getMyTopTracks({limit: 1})
 		.then(function(data) { // get track
 			for(var x in data.body.items) {
 				connection.query("INSERT IGNORE INTO song(uri, title, album, artist) VALUES ('" + data.body.items[x].uri + "','" + mysqlEscape(data.body.items[x].name) + "','" + mysqlEscape(data.body.items[x].album.name) + "','" + mysqlEscape(data.body.items[x].artists[0].name) + "')");
@@ -121,16 +121,32 @@ app.get('/session_start', function(req,res) {
 	spotifyApi.createPlaylist(req.headers.userid, 'jukebox', { 'public' : false })
 	.then(function(data) {
 		// dependent upon radio button selection for method of constructing playlist
-		connection.query("SELECT DISTINCT user_id FROM joins, user WHERE host_uri = '" + req.headers.useruri + "'",
+		var playlist = data.body.id;
+		// select the users in this session
+		connection.query("SELECT user_id FROM joins, user WHERE host_uri = '" + req.headers.useruri + "'",
 		function(err, rows, fields) {
 			for(x in rows) {
-				console.log("user" + x + ": " + rows[x].user_id);
-				connection.query("SELECT DISTINCT s_uri FROM stores, user WHERE user.user_id = '" + rows[x].user_id + "'", function(err, rows, fields) {
+				var user = rows[x].user_id;
+				// select the songs associated with this user
+				connection.query("SELECT s_uri FROM stores WHERE user_uri = 'spotify:user:" + rows[x].user_id + "'", function(err, rows, fields) {
 					var array = [];
 					for(y in rows) {
 						array.push(rows[y].s_uri);
 					}
-					spotifyApi.addTracksToPlaylist(rows[x].user_id, data.body.uri, JSON.stringify(array), {});
+
+					// debugging
+					console.log("about to add track");
+					console.log("userid = " + user);
+					console.log("playlist uri = " + playlist);
+					console.log("song uris = " + JSON.stringify(array));
+
+					// add playlist, array is json of song uris
+					spotifyApi.addTracksToPlaylist(user, playlist, JSON.stringify(array));
+					.then(function(data) {
+						console.log("Added tracks to the playlist");
+					}).catch(function(err) {
+						console.error(err);
+					});
 				});
 			}
 		});
