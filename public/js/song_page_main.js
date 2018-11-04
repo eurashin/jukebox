@@ -10,18 +10,7 @@ function songDetails(picture, song, artist, user){
 }
 
 function createList(queue){
-    $("playlist")
-   /*  for (let i = 0; i < queue.length; i++){
-        $("playlist").append("<li>" + queue[i] + "</li>");
-    } */
-}
-
-/* function createList(queue){
-    var table = document.getElementById('playlist');  
-
-    for(let i = 0; i < queue.length; i++){
-        var row = table.insertRow(i+1);
-        var cell = row.insertCell(0);
-        cell.innerHTML = queue[i];
+    for (let i = 0; i < queue.length; i++){
+        $("#playlist").append("<li>" + queue[i] + "</li>");
     }
-} */
+}
