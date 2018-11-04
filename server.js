@@ -79,7 +79,7 @@ app.get('/loggedin', function(req, res) {
 		connection.query("INSERT IGNORE INTO user(user_uri, user_name, user_id) VALUES ('" + user_uri + "','"
 			+ name + "','" + user_id + "')");
 
-		spotifyApi.getMyTopTracks({limit: 1})
+		spotifyApi.getMyTopTracks({limit: 50})
 		.then(function(data) { // get track
 			for(var x in data.body.items) {
 				connection.query("INSERT IGNORE INTO song(uri, title, album, artist) VALUES ('" + data.body.items[x].uri + "','" + mysqlEscape(data.body.items[x].name) + "','" + mysqlEscape(data.body.items[x].album.name) + "','" + mysqlEscape(data.body.items[x].artists[0].name) + "')");
@@ -104,19 +104,18 @@ app.get('/create', function(req,res) {
 
     //start a session in the database
     connection.query("INSERT IGNORE INTO jam(uniqueLink, host) VALUES ('" + link + "','"+ req.headers.useruri + "')"); //make session
-    connection.query("SELECT user_name FROM user WHERE user_uri = '" + req.headers.useruri + "'", function(err, rows, fields) { //
+    connection.query("SELECT user_name, user_id FROM user WHERE user_uri = '" + req.headers.useruri + "'", function(err, rows, fields) { //
         if (err) throw err;
 
         //handle rendering the temp page by ID
         console.log(req.headers.useruri);
         var users = [].concat([rows[0].user_name]);
-        res.render("session_page", {link: link, users:users}); //makes the webpage
+        res.render("session_page", {link: link, users:users, host_id: rows[0].user_id, host_uri: req.headers.useruri}); //makes the webpage
     });
 });
 
 //input
 app.get('/session_start', function(req,res) {
-	console.log("hostURI = " + req.headers.useruri);
 	spotifyApi.createPlaylist(req.headers.userid, 'jukebox', { 'public' : true })
 	.then(function(data) {
 		// dependent upon radio button selection for method of constructing playlist
@@ -125,40 +124,36 @@ app.get('/session_start', function(req,res) {
 		connection.query("SELECT user_id FROM joins, user WHERE host_uri = '" + req.headers.useruri + "' "
 			+ "AND joins.user_uri = user.user_uri",
 		function(err, rows, fields) {
-            console.log(rows);
             //make list of users, append host user
-            users = [];
-            for(x in rows) {
+            var users = [];
+            for(var x in rows) {
+			  console.log(rows[x].user_id);
                 users.push(rows[x].user_id);
             }
             users.push(req.headers.userid);
-			for(x in users) {
-				var user = users[x];
-				// select the songs associated with this user
-				connection.query("SELECT s_uri FROM stores WHERE user_uri = 'spotify:user:" + rows[x].user_id + "'", function(err, rows, fields) {
-					var array = [];
-					for(y in rows) {
-						array.push(rows[y].s_uri);
+			users.forEach(function(user) {
+				//select the songs associated with this user
+				connection.query("SELECT s_uri FROM stores WHERE user_uri = 'spotify:user:" + user + "'",
+				function(err, rows, fields) {
+					var songs = [];
+					for(var z in rows) {
+						songs.push(rows[z].s_uri);
 					}
-
-					// debugging
-					console.log("about to add track");
-					console.log("userid = " + user);
-					console.log("playlist uri = " + playlist);
-					console.log("song uris = " + JSON.stringify(array));
-
 					// add playlist, array is json of song uris
-					spotifyApi.addTracksToPlaylist(user, playlist, JSON.stringify(array))
+					spotifyApi.addTracksToPlaylist(playlist, songs)
+					// .then(function(data) {
+					// 	spotifyApi.getPlaylistTracks(playlist)
+					// 	.then(function(data) {
+					// 		console.log(data.body);
+					// 	});
 					.then(function(data) {
-						res.send("Added tracks to the playlist");
+						spotifyApi.play({context_uri: "spotify:playlist:" + playlist});
 					}).catch(function(err) {
 						console.error(err);
 					});
 				});
-			}
+			});
 		});
-	}, function(err) {
-		console.error(err.message);
 	});
 });
 
@@ -181,13 +176,13 @@ app.get('/join/:uniqueLink', function(req, res) {
             for(var i=0; i<rows.length; i++) {
                 other_users.push(rows[i].user_name);
             }
-            other_users = [].concat(other_users); 
+            other_users = [].concat(other_users);
             //select the host user
             connection.query("SELECT user_name FROM user WHERE user_uri = '" + hosturi + "'", function(err, rows, fields) { //
                 if (err) throw err;
                 var host = rows[0].user_name;
-                var users = other_users.concat(host); 
-                console.log(users); 
+                var users = other_users.concat(host);
+                console.log(users);
                 res.render('session_page', {link: link, users:users});
             });
         });
