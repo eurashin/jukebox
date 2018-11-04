@@ -125,20 +125,23 @@ app.get('/session_start', function(req,res) {
 		connection.query("SELECT user_id FROM joins, user WHERE host_uri = '" + req.headers.useruri + "' "
 			+ "AND joins.user_uri = user.user_uri",
 		function(err, rows, fields) {
-            console.log(rows);
             //make list of users, append host user
-            users = [];
-            for(x in rows) {
+            var users = [];
+            for(var x in rows) {
                 users.push(rows[x].user_id);
             }
             users.push(req.headers.userid);
-			for(x in users) {
-				var user = users[x];
+            console.log(users);
+			for(var y=0; y<users.length; y++) {
+				var user = users[y];
+                console.log("CURR USER: " + user);
 				// select the songs associated with this user
-				connection.query("SELECT s_uri FROM stores WHERE user_uri = 'spotify:user:" + rows[x].user_id + "'", function(err, rows, fields) {
+                console.log("SELECTING: " + 'spotify:user:' + user + "'");
+				connection.query("SELECT s_uri FROM stores WHERE user_uri = 'spotify:user:" + user + "'", function(err, rows, fields) {
 					var array = [];
-					for(y in rows) {
-						array.push(rows[y].s_uri);
+                    console.log(rows);
+					for(var z in rows) {
+						array.push(rows[z].s_uri);
 					}
 
 					// debugging
@@ -148,7 +151,7 @@ app.get('/session_start', function(req,res) {
 					console.log("song uris = " + JSON.stringify(array));
 
 					// add playlist, array is json of song uris
-					spotifyApi.addTracksToPlaylist(user, playlist, JSON.stringify(array))
+					spotifyApi.addTracksToPlaylist(playlist, JSON.stringify(array))
 					.then(function(data) {
 						res.send("Added tracks to the playlist");
 					}).catch(function(err) {
@@ -171,7 +174,7 @@ app.get('/join/:uniqueLink', function(req, res) {
         hosturi = rows[0].host;
         console.log(hosturi);
         //add user to session
-        connection.query("INSERT INTO joins(host_uri, user_uri) VALUES ('" + hosturi + "','" + req.headers.useruri + "')");
+        connection.query("INSERT IGNORE INTO joins(host_uri, user_uri) VALUES ('" + hosturi + "','" + req.headers.useruri + "')");
         //handle rendering the temp page by ID
         //select all the users in session
         connection.query("SELECT DISTINCT user_name FROM user,joins,jam WHERE jam.host ='" +  hosturi +
