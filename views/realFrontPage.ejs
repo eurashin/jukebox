@@ -7,29 +7,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="css/frontPageStyle.css" />
     <script src="js/frontPage.js"></script>
+     <link rel='shortcut icon' type='image/x-icon' href='css/img/favicon.ico' />
      <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
 
 
 </head>
 <body>
      <div class="main">
-         <div id="container" style="top:100px; left:25%;position:fixed;">
-         <h1 id="welcomeText" style="font-size:45pt;">Welcome, <%= name%></h1> 
-        <h2 id="tagline" style="font-size:20pt; font-style:italic;"> insert 5c to play</h2>
-        <h2 id="anchorDown"> anchor tf down</h2>
+         <div class="container" style="top:100px; left:25%;position:fixed;">
+         <h1 id="welcomeText" style="font-size:24pt;">Welcome, <%= name%></h1> 
+         <h2 id="tagline" style="font-size:14pt; font-style:italic;"> insert 5¢ to play</h2>
+        
+            <div id="buttonBackground"></div>
 
-        <img src="css/img/juke.png" style="width:400px; position:fixed; bottom:0px; left:100px;"> </img>
          <div id="frontPageButton">
                  <div class="joinSessionButton">
                      <button id="joinButton" type="button">
+                     Join a Session
                      </button>
                  </div>
 
                 <div class="hostSessionButton">
                         <button id="createButton" onclick="createJam('<%= user_uri%>')" type="button">
+                        Host a Session
                      </button>
                 </div>
          </div>
+
+          <div class="getJamName">
+            <label for="jamNameInput">Link:</label>
+            <input type="text" id="jamNameInput"> 
+          </div>
+
+          <div class="modeRadios">
+            <input type="radio" id="randomMode" name="q1" value="0">
+            <label for="randomMode">Random</label>
+            <input type="radio" id="turnsMode" name="q1" value="1">
+            <label for="turnsMode">Turns</label>
+            <input type="radio" id="smartMode" name="q1" value="2">
+            <label for="smartMode">Smart</label>
+          </div>
      </div>
      
      
