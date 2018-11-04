@@ -11,6 +11,8 @@ var connection = mysql.createConnection({
     database : 'jukend'
 });
 
+connection.connect();
+
 var request = require('request');
 var cors = require('cors');
 var querystring = require('querystring');
@@ -75,7 +77,6 @@ app.get('/loggedin', function(req, res) {
 		var user_uri = data.body.uri;
 		var user_id = data.body.id;
 
-		connection.connect();
 		connection.query("INSERT IGNORE INTO user(user_uri, user_name, user_id) VALUES ('" + user_uri + "','"
 			+ name + "','" + user_id + "')");
 
@@ -192,8 +193,6 @@ app.get('/destroy', function(req,res){
     //delete host users session
     connection.query("DELETE FROM joins WHERE host_uri='" +hosturi+"'");
     connection.query("DELETE FROM jam WHERE host='" +hosturi+"'");
-
-    connection.end();
 
     //redirect to homepage
     res.render('index');
