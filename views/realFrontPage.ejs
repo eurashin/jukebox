@@ -14,7 +14,7 @@
 <body>
       
      <div class="main">
-        <h1 id="welcomeText">Welcome, POOPs</h1> 
+        <h1 id="welcomeText">Welcome, <%=name%></h1> 
         <h2 id="tagline"> insert 5c to play</h2>
         <h2 id="anchorDown"> anchor tf down</h2>
         
@@ -36,23 +36,6 @@
      </div>
     
      
-     
-   <div id="box">
-         Initial Content
-         <div class="hidden">   
-             This is hidden content
-        </div>
-     </div>
- 
- <script>
-        $(document).ready(function() {
-    $('#box').click(function() {
-        $(this).find(".hidden").toggleClass('open');
-    });
-});
-        </script>
-      
-
         
 
 </body>
