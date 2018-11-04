@@ -103,7 +103,7 @@ app.get('/create', function(req,res) {
     var link = 'https://jukebox-node-8080.herokuapp.com/join/' + randString;
 
     //start a session in the database
-    connection.query("INSERT IGNORE INTO jam(host) VALUES ('" + req.headers.useruri + "')"); //make session
+    connection.query("INSERT IGNORE INTO jam(uniqueLink, host) VALUES ('" + link + "','"+ req.headers.useruri + "')"); //make session
     connection.query("SELECT user_name FROM user WHERE user_uri = '" + req.headers.useruri + "'", function(err, rows, fields) { //
         if (err) throw err;
 
