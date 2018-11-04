@@ -70,7 +70,7 @@ app.get('/loggedin', function(req, res) {
 
 	// get user and pass relevant information
 	spotifyApi.getMe().then(function(data) {
-		res.render('realFrontPage', { access_token: access_token, name: data.body.display_name });
+		res.render('realFrontPage', { name: data.body.display_name , user_uri:data.body.uri});
 	}).catch(function(err) {
 		console.log("Something went wrong", err.message);
 	})
@@ -94,20 +94,20 @@ app.post('/create', function(req,res){
 });
 
 //called when "join a session" button is pressed
-app.post('/join', function(req, res) {
+app.post('/join/:hosturi', function(req, res) {
     connection.connect();
     //add user to session
-    connection.query("INSERT INTO joins(host_uri, user_uri) VALUES ('" + req.headers.hosturi + "','" + req.headers.useruri + "')");
+    connection.query("INSERT INTO joins(host_uri, user_uri) VALUES ('" + req.params.hosturi + "','" + req.headers.useruri + "')");
     
     //handle rendering the temp page by ID
     var link = '/' + req.headers.hosturi + '/join'; 
     //select all the users in session
-    connection.query("SELECT DISTINCT user_name FROM user,joins,jam WHERE jam.host ='" +  req.headers.hosturi + 
+    connection.query("SELECT DISTINCT user_name FROM user,joins,jam WHERE jam.host ='" +  req.params.hosturi + 
             "' AND user.user_uri = joins.user_uri", function(err, rows, fields) { 
         if (err) throw err;
         var other_users = rows; 
         //select the host user 
-        connection.query("SELECT user_name AS name FROM user WHERE user_uri = '" + req.headers.hosturi + "'", function(err, rows, fields) { //
+        connection.query("SELECT user_name AS name FROM user WHERE user_uri = '" + req.params.hosturi + "'", function(err, rows, fields) { //
             if (err) throw err; 
             var host = rows;
             res.render('session_page', {link: link, users:host.concat(other_users)}); 

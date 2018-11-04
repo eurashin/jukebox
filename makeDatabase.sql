@@ -20,6 +20,7 @@ CREATE TABLE song
 	(
 	uri VARCHAR(20) PRIMARY KEY NOT NULL,
 	title VARCHAR(20),
+    album VARCHAR(20),
 	artist VARCHAR(20)
 	);
 
