@@ -13,14 +13,12 @@
 </head>
 <body>
      <div class="main">
-         <div style="top:100px; left:25%;position:fixed;">
+         <div id="container" style="top:100px; left:25%;position:fixed;">
          <h1 id="welcomeText" style="font-size:45pt;">Welcome, <%= name%></h1> 
         <h2 id="tagline" style="font-size:20pt; font-style:italic;"> insert 5c to play</h2>
         <h2 id="anchorDown"> anchor tf down</h2>
-         </div>
 
         <img src="css/img/juke.png" style="width:400px; position:fixed; bottom:0px; left:100px;"> </img>
-          <div id="buttonBackground"></div>
          <div id="frontPageButton">
                  <div class="joinSessionButton">
                      <button id="joinButton" type="button">
@@ -31,7 +29,7 @@
                         <button id="createButton" onclick="createJam('<%= user_uri%>')" type="button">
                      </button>
                 </div>
-          </div>
+         </div>
      </div>
      
      
