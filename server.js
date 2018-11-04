@@ -178,7 +178,7 @@ app.get('/join/:uniqueLink', function(req, res) {
                 var host = rows[0].user_name;
                 var users = other_users.concat(host);
                 console.log(users);
-                res.render('session_page', {link: link, users:users, hosturi:hosturi});
+                res.render('session_page', {link: link, users:users, host_uri:hosturi});
             });
         });
     });
