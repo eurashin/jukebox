@@ -1,27 +1,98 @@
 .main{
-    background:forestgreen;
     text-align: center;
+}
+
+body{
+    font-family:"Arial", monospace;
+    color:white;
+    font-weight:bold;
 }
 
 #tagline{
     font-family: "Raleway", sans-serif;
 }
 
-.frontPageButton{
-    position: absolute;
-    left: 0;
-    top: 50%;
-    width: 100%;
+
+#anchorDown{
+    color: gold;
+}
+
+#buttonBackground{ 
+    position: fixed;
+    left: 25%;
+    top: 45%;
+    width: 50%;
+   height: 25%;
+    text-align: center;
+}
+
+
+
+    button {
+        font-size:12pt;
+        background-image: url("img/coin.png");
+        background-repeat: no-repeat;
+        background-size:cover;
+        background-position:center;
+        padding: 2%;
+        border: none;
+        cursor: pointer;
+        border-radius:100%;
+        width: 140px;
+        height:140px;
+        margin: 5%;
+        
+    }
+    
+#frontPageButton{ 
+    position: fixed;
+    left: 12%;
+    top: 42%;
+    width: 50%;
     text-align: center;
     font-size: 18px;
 }
 
 #joinSession{
-    padding: .5em;
-    margin: 0;
+    padding: 0em;
 }
 
 #hostSession{
-    padding: .5em;
-    margin: 0;
+    padding: 0em;
+}
+
+body {
+    background-image: url('img/wall.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color:(0,0,0,0);
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+#box {
+    height:auto;
+    left:25%;
+    width: 40%;
+    background:#000;
+    color:#fff;
+    cursor:pointer;
+}
+
+.hidden {
+    height: 0px;
+    -webkit-transition: height 0.5s linear;
+       -moz-transition: height 0.5s linear;
+        -ms-transition: height 0.5s linear;
+         -o-transition: height 0.5s linear;
+            transition: height 0.5s linear;
+}
+
+.hidden.open {
+     height: 200px;
+     -webkit-transition: height 0.5s linear;
+        -moz-transition: height 0.5s linear;
+         -ms-transition: height 0.5s linear;
+          -o-transition: height 0.5s linear;
+             transition: height 0.5s linear;
 }

@@ -1,37 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>jukebox</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="css/frontPageStyle.css" />
-    <script src="main.js"></script>
+    <script src="js/frontPage.js"></script>
+     <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+
+
 </head>
 <body>
-
      <div class="main">
-         <h1 id="tagline"><%= name %></h1>
+         <div style="top:100px; left:25%;position:fixed;">
+         <h1 id="welcomeText" style="font-size:45pt;">Welcome, <%= name%></h1> 
+        <h2 id="tagline" style="font-size:20pt; font-style:italic;"> insert 5c to play</h2>
+        <h2 id="anchorDown"> anchor tf down</h2>
+         </div>
 
-	       <div id="user-profile">
-
-            </div>
-
-            <div class="frontPageButton">
-                 <div id="joinSession">
-                     <button>
-                       Join a Session
+        <img src="css/img/juke.png" style="width:400px; position:fixed; bottom:0px; left:100px;"> </img>
+          <div id="buttonBackground"></div>
+         <div id="frontPageButton">
+                 <div class="joinSessionButton">
+                     <button id="joinButton" type="button">
                      </button>
                  </div>
 
-                <div id="hostSession">
-                        <button>
-                            Host a Session
+                <div class="hostSessionButton">
+                        <button id="createButton" onclick="createJam('<%= user_uri%>')" type="button">
                      </button>
                 </div>
           </div>
-        </div>
-
+     </div>
+     
+     
+ 
+ <script>
+        $(document).ready(function() {
+    $('#box').click(function() {
+        $(this).find(".hidden").toggleClass('open');
+    });
+});
+        </script>
+      
 	   <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
 	   <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 	   <script>
@@ -90,42 +102,6 @@
 	   		    $('#login').hide();
 	   		    $('#loggedin').show();
 	   		  }
-	   	   });
-
-	   	   $.ajax({
-	   		   url: 'https://api.spotify.com/v1/me/top/tracks?limit=50',
-	   		   headers: {
-	   			   'Authorization': 'Bearer ' + access_token
-	   		   },
-	   		   success: function(response) {
-	   			   topSongsPlaceholder.innerHTML = topSongsTemplate(response);
-	   		   }
-	   	   });
-	   	 } else {
-	   	     // render initial screen
-	   	     $('#login').show();
-	   	     $('#loggedin').hide();
-	   	 }
-
-	   	 document.getElementById('obtain-new-token').addEventListener('click', function() {
-	   	   $.ajax({
-	   	     url: '/refresh_token',
-	   	     data: {
-	   		  'refresh_token': refresh_token
-	   	     }
-	   	   }).done(function(data) {
-	   	     access_token = data.access_token;
-	   	     oauthPlaceholder.innerHTML = oauthTemplate({
-	   		  access_token: access_token,
-	   		  refresh_token: refresh_token
-	   	     });
-	   	   });
-	   	 }, false);
-	       }
-	     })();
-	   </script>
+		  });
 </body>
-
-
-
 </html>
