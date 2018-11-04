@@ -5,22 +5,38 @@ body {
     background-size: cover;
 }
 
+#backgroundShade {
+    position: fixed;
+    left:50%;
+    width:60%;
+    height:50%;
+    top:42.5%;
+    transform: translate(-50%,-50%);
+    background-color:darkslateblue;
+    opacity:0.5;
+    border-radius: 10px
+    ;
+}
+
 .url_display {
     position: fixed;
     top: 25%;
     left: 50%;
     transform: translate(-50%, -50%);
-
-    background-color: orangered;
+    background-color: lightblue;
     color:white;
+    padding: 14px 40px;
+    border-radius: 8px;
+    transition-duration: 0.4s;
+    border: 2px solid black;
+    font-size: 20px;
 }
 
 .myTabDiv {
     position: fixed;
     top: 50%;
-    left: 25%;
+    left: 35%;
     transform: translate(-50%, -50%);
-
     border-collapse: collapse;
     border: 1px solid black;
 }
@@ -28,6 +44,20 @@ body {
 #startButton {
     position: fixed;
     top: 50%;
-    left:75%;
+    left:65%;
     transform: translate(-50%, -50%);
+}
+
+button {
+    border: none;
+    background-color:darkblue;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 8px;
+    transition-duration: 0.4s;
+    border: 2px solid black;
+}
+
+button:hover {
+    background-color: green;
 }

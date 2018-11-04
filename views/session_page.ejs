@@ -17,9 +17,18 @@
 <style>
     body,h1 {font-family: "Raleway", sans-serif}
     body, html {height: 100%}
+
+    th, td {
+    padding: 4px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    }
+    tr:hover {background-color:#f5f5f5;}
+
 </style>
 
 <body onload= "createTable();">
+    <div id="backgroundShade"></div>
 
     <div class="url_display">
        Your URL is: hi.com
@@ -30,7 +39,6 @@
         <tr>
             <th>Users in session</th>
         </tr>
-        <tr style="text-align:right">
         </table>
     </div>
 
