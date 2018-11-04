@@ -139,13 +139,7 @@ app.get('/session_start', function(req,res) {
 					for(var z in rows) {
 						songs.push(rows[z].s_uri);
 					}
-					// add playlist, array is json of song uris
 					spotifyApi.addTracksToPlaylist(playlist, songs)
-					// .then(function(data) {
-					// 	spotifyApi.getPlaylistTracks(playlist)
-					// 	.then(function(data) {
-					// 		console.log(data.body);
-					// 	});
 					.then(function(data) {
 						spotifyApi.play({context_uri: "spotify:playlist:" + playlist});
 					}).catch(function(err) {
@@ -166,7 +160,7 @@ app.get('/join/:uniqueLink', function(req, res) {
         hosturi = rows[0].host;
         console.log(hosturi);
         //add user to session
-        connection.query("INSERT INTO joins(host_uri, user_uri) VALUES ('" + hosturi + "','" + req.headers.useruri + "')");
+        connection.query("INSERT IGNORE INTO joins(host_uri, user_uri) VALUES ('" + hosturi + "','" + req.headers.useruri + "')");
         //handle rendering the temp page by ID
         //select all the users in session
         connection.query("SELECT DISTINCT user_name FROM user,joins,jam WHERE jam.host ='" +  hosturi +
@@ -183,15 +177,26 @@ app.get('/join/:uniqueLink', function(req, res) {
                 var host = rows[0].user_name;
                 var users = other_users.concat(host);
                 console.log(users);
-                res.render('session_page', {link: link, users:users});
+                res.render('session_page', {link: link, users:users, hosturi:hosturi});
             });
         });
     });
 
 });
 
-app.post('/destroy', function(req,res){
+app.get('/destroy', function(req,res){
+    //delete songs associated with users
+    hosturi = req.headers.useruri;
+    connection.query("DELETE FROM stores");
+
+    //delete host users session
+    connection.query("DELETE FROM joins WHERE host_uri='" +hosturi+"'");
+    connection.query("DELETE FROM jam WHERE host='" +hosturi+"'");
+
     connection.end();
+
+    //redirect to homepage
+    res.render('index');
 });
 
 // spotify authentication verification

@@ -27,7 +27,7 @@
 
 
     <div class="myTabDiv" style="width:300px; position:25%;">
-        <table id="userTable" style="width:300px; position:25%;">
+        <table id="userTable" style="width:300px; position:25%;  align=center";>
         <tr>
             <th>Users in session</th>
         </tr>
@@ -37,9 +37,10 @@
     <div class="buttons">
         <div id="startButton">
         	<button type="submit" onclick="startSession('<%=host_uri%>','<%=host_id%>')"> Play </button>
+          <button type="submit" onclick="endSession('<%=hosturi%>')"> Stop </button>
         </div>
     </div>
-
+ <img class="spotify" src='css/img/spotify.png'</img>
 
 </body>
 </html>
