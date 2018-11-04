@@ -44,7 +44,7 @@ function startSession(userUri, userId) {
 		newDocwrite(data);
 		newDoc.close();
 	}, 'text');
-
+}
 
 function joinJam(userUri) {
     var website = $('#inputField').val();
