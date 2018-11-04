@@ -21,10 +21,10 @@
         <img src="css/img/juke.png" style="width:400px; position:fixed; bottom:0px; left:100px;"> </img>
          <div id="frontPageButton">
                  <div class="joinSessionButton">
-                     <button id="joinButton" type="button">
+                     <button id="joinButton" onclick="joinJam('<%= user_uri%>')" type="button">
                      </button>
                  </div>
-
+                
                 <div class="hostSessionButton">
                         <button id="createButton" onclick="createJam('<%= user_uri%>')" type="button">
                      </button>
