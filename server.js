@@ -143,6 +143,7 @@ app.get('/session_start', function(req,res) {
 					spotifyApi.addTracksToPlaylist(playlist, songs)
 					.then(function(data) {
 						spotifyApi.play({context_uri: "spotify:playlist:" + playlist});
+						spotifyApi.unfollowPlaylist(playlist);
 					}).catch(function(err) {
 						console.error(err);
 					});
@@ -187,6 +188,9 @@ app.get('/join/:uniqueLink', function(req, res) {
 });
 
 app.get('/destroy', function(req,res){
+    // pause spotify playback
+    spotifyApi.pause();
+
     //delete songs associated with users
     hosturi = req.headers.useruri;
     connection.query("DELETE FROM stores");
