@@ -15,9 +15,9 @@
 <body>
      <div class="main">
          <div class="container" style="top:100px; left:25%;position:fixed;">
-         <h1 id="welcomeText" style="font-size:24pt;">Welcome, <%= name%></h1> 
+         <h1 id="welcomeText" style="font-size:24pt;">Welcome, <%= name%></h1>
          <h2 id="tagline" style="font-size:14pt; font-style:italic;"> insert 5¢ to play</h2>
-        
+
             <div id="buttonBackground"></div>
 
          <div id="frontPageButton">
@@ -26,17 +26,23 @@
                      Join a Session
                      </button>
                  </div>
-                
+
                 <div class="hostSessionButton">
                         <button id="createButton" onclick="createJam('<%= user_uri%>')" type="button">
                         Host a Session
                      </button>
                 </div>
+
+			 <div class="startSessionButton">
+				 <button id="createButton" onclick="startSession('<%= user_uri %>, <%= user_id %>')" type="button">
+					 testpurposes
+				 </button>
+			 </div>
          </div>
 
           <div class="getJamName">
             <label for="jamNameInput">Link:</label>
-            <input type="text" id="jamNameInput"> 
+            <input type="text" id="jamNameInput">
           </div>
 
           <div class="modeRadios">
@@ -48,9 +54,21 @@
             <label for="smartMode">Smart</label>
           </div>
      </div>
-     
-     
- 
+<<<<<<< HEAD
+
+
+   <div id="box">
+         Initial Content
+         <div class="hidden">
+             This is hidden content
+        </div>
+     </div>
+
+=======
+
+
+
+>>>>>>> c4f101100ede0ba9307cc4c2c87bfe4ba7c33764
  <script>
         $(document).ready(function() {
     $('#box').click(function() {
@@ -58,7 +76,7 @@
     });
 });
         </script>
-      
+
 	   <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
 	   <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 	   <script>

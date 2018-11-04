@@ -73,9 +73,11 @@ app.get('/loggedin', function(req, res) {
 		.then(function(data) { // get user
 		var name = data.body.display_name;
 		var user_uri = data.body.uri;
+		var user_id = data.body.id;
 
 		connection.connect();
-		connection.query("INSERT IGNORE INTO user(user_uri, user_name) VALUES ('" + user_uri + "','" + name + "')");
+		connection.query("INSERT IGNORE INTO user(user_uri, user_name, user_id) VALUES ('" + user_uri + "','"
+			+ name + "','" + user_id + "')");
 
 		spotifyApi.getMyTopTracks({limit: 50})
 		.then(function(data) { // get track
@@ -86,7 +88,7 @@ app.get('/loggedin', function(req, res) {
 		});
 
 		// render page
-		res.render("realFrontPage", {name: name, user_uri: user_uri});
+		res.render("realFrontPage", {name: name, user_uri: user_uri, user_id: user_id});
 	}).catch(function(err) {
 		console.error(err.message);
 	});
@@ -94,23 +96,42 @@ app.get('/loggedin', function(req, res) {
 
 /********** SESSION FUNCTIONS *************/
 //called when "start a session" button is pressed
-//input: userURI
-app.get('/create', function(req,res){
-    //generate random string
-    var randString = generateRandomString(5);
-    var link = 'https://jukebox-node-8080.herokuapp.com/join/' + randString;
+//input: useruri
+app.get('/create', function(req,res) {
     //start a session in the database
-    connection.query("INSERT INTO jam(uniqueLink, host) VALUES ('" + link + "','" + req.headers.useruri + "')"); //make session
-    connection.query("SELECT user_name FROM user WHERE user_uri = '" + req.headers.useruri + "'", function(err, rows, fields) { //
+    connection.query("INSERT IGNORE INTO jam(host) VALUES ('" + req.headers.useruri + "')"); //make session
+    connection.query("SELECT user_name AS name FROM user WHERE user_uri = '" + req.headers.useruri + "'", function(err, rows, fields) { //
         if (err) throw err;
 
         //handle rendering the temp page by ID
-        console.log(req.headers.useruri);
-        var users = [].concat([rows[0].user_name]);
-        console.log(users);
-        res.render("session_page", {link: link, users:users}); //makes the webpage
+        var link = '/' + req.headers.useruri + '/join';
+        res.render("session_page", {link: link, users:rows}); //makes the webpage
     });
+});
 
+//input
+app.get('/session_start', function(req,res) {
+	spotifyApi.setAccessToken(access_token);
+	console.log("hostURI = " + req.headers.useruri);
+	spotifyApi.createPlaylist(req.headers.userid, 'jukebox', { 'public' : false })
+	.then(function(data) {
+		// dependent upon radio button selection for method of constructing playlist
+		connection.query("SELECT DISTINCT user_id FROM joins, user WHERE host_uri = '" + req.headers.useruri + "'",
+		function(err, rows, fields) {
+			for(x in rows) {
+				console.log("user" + x + ": " + rows[x].user_id);
+				connection.query("SELECT DISTINCT s_uri FROM stores, user WHERE user.user_id = '" + rows[x].user_id + "'", function(err, rows, fields) {
+					var array = [];
+					for(y in rows) {
+						array.push(rows[y].s_uri);
+					}
+					spotifyApi.addTracksToPlaylist(rows[x].user_id, data.body.uri, JSON.stringify(array), {});
+				});
+			}
+		});
+	}, function(err) {
+		console.error(err.message);
+	});
 });
 
 //called when "join a session" button is pressed
@@ -118,15 +139,15 @@ app.post('/join/:hosturi', function(req, res) {
     //add user to session
     connection.query("INSERT INTO joins(host_uri, user_uri) VALUES ('" + req.params.hosturi + "','" + req.headers.useruri + "')");
     //handle rendering the temp page by ID
-    var link = '/' + req.headers.hosturi + '/join';
+    var link = '/join/' + req.params.hosturi;
     //select all the users in session
-    connection.query("SELECT DISTINCT user_name FROM user,joins,jam WHERE jam.host ='" +  req.params.hosturi + 
-            "' AND user.user_uri = joins.user_uri", function(err, rows, fields) { 
+    connection.query("SELECT DISTINCT user_name FROM user,joins,jam WHERE jam.host ='" +  req.params.hosturi +
+            "' AND user.user_uri = joins.user_uri", function(err, rows, fields) {
         if (err) throw err;
-        var other_users = rows; 
-        //select the host user 
+        var other_users = rows;
+        //select the host user
         connection.query("SELECT user_name FROM user WHERE user_uri = '" + req.params.hosturi + "'", function(err, rows, fields) { //
-            if (err) throw err; 
+            if (err) throw err;
             var host = rows[0].user_name;
             res.render('session_page', {link: link, users:host.concat(other_users)});
         });
@@ -136,7 +157,6 @@ app.post('/join/:hosturi', function(req, res) {
 
 app.post('/destroy', function(req,res){
     connection.end();
-
 });
 
 // spotify authentication verification
@@ -147,7 +167,8 @@ app.get('/login', function(req, res) {
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = 'user-read-private user-read-email user-top-read user-read-playback-state user-modify-playback-state';
+  var scope = 'user-read-private user-read-email user-top-read user-read-playback-state'
+  	+ ' user-modify-playback-state playlist-modify-private playlist-read-private playlist-modify-public';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
