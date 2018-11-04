@@ -10,9 +10,9 @@ body{
 
 
 .spotify{
-    width:230px; 
-    position:fixed; 
-    bottom:50px; 
+    width:230px;
+    position:fixed;
+    bottom:50px;
     left:70px;
     z-index:-5;
 }
@@ -22,12 +22,12 @@ body{
 }
 
 
-.container{ 
+.container{
     position: fixed;
     left: 25%;
     top: 45%;
-    text-align: center; 
-   
+    text-align: center;
+
 }
 
 .modeRadios{
@@ -58,13 +58,13 @@ body{
     transform: translate(-50%,0%);
 }
 
-#buttonBackground{ 
+#buttonBackground{
     position: fixed;
     left:0px;
     top: 0px;
     width: 100%;
     height: 100%;
-    background-color: antiquewhite; 
+    background-color: antiquewhite;
     opacity: .4;
     z-index:-3;}
 
@@ -76,14 +76,14 @@ body{
         cursor: pointer;
         width: 40%;
         margin: 4%;
-        
+
     }
 
     button:hover {
         background-color: rgb(49, 49, 49);
     }
-    
-#frontPageButton{ 
+
+#frontPageButton{
     position: fixed;
     left: 25%;
     top: 42%;
@@ -101,12 +101,7 @@ body{
 }
 
 body {
-    background-image: url('img/wall.jpg');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-color:(0,0,0,0);
-    background-size: cover;
-    background-attachment: fixed;
+    background-color: rgba(185,204,111,0.32);
 }
 
 .url_display {
@@ -154,7 +149,7 @@ body {
 
 #musicWrapper {
     position:fixed;
-    top:25%; 
+    top:25%;
     left:42%;
 }
 
