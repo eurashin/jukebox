@@ -110,7 +110,7 @@ app.get('/create', function(req,res) {
         //handle rendering the temp page by ID
         console.log(req.headers.useruri);
         var users = [].concat([rows[0].user_name]);
-        res.render("session_page", {link: link, users:users}); //makes the webpage
+        res.render("session_page", {link: link, users:users, hosturi:req.headers.useruri}); //makes the webpage
     });
 });
 
@@ -191,15 +191,26 @@ app.get('/join/:uniqueLink', function(req, res) {
                 var host = rows[0].user_name;
                 var users = other_users.concat(host); 
                 console.log(users); 
-                res.render('session_page', {link: link, users:users});
+                res.render('session_page', {link: link, users:users, hosturi:hosturi});
             });
         });
     });
 
 });
 
-app.post('/destroy', function(req,res){
+app.get('/destroy', function(req,res){
+    //delete songs associated with users
+    hosturi = req.headers.useruri;
+    connection.query("DELETE FROM stores");
+
+    //delete host users session
+    connection.query("DELETE FROM joins WHERE host_uri='" +hosturi+"'");
+    connection.query("DELETE FROM jam WHERE host='" +hosturi+"'");
+    
     connection.end();
+
+    //redirect to homepage
+    res.render('index');
 });
 
 // spotify authentication verification

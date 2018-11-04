@@ -41,7 +41,7 @@ function startSession(userUri, userId) {
 
 	$.get(website, function(data) {
 		var newDoc = document.open("text/html", "replace");
-		newDocwrite(data);
+		newDoc.write(data);
 		newDoc.close();
 	}, 'text');
 }
