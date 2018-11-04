@@ -19,10 +19,10 @@
     body, html {height: 100%}
 </style>
 
-<body onload= "createTable();">
+<body onload= "createTable(<%=users%>);">
 
     <div class="url_display">
-       Your URL is: hi.com
+        Your URL is: <%=link %>
     </div>
 
     <div class="myTabDiv">

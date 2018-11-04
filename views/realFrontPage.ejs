@@ -6,6 +6,7 @@
     <title>jukebox</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="css/frontPageStyle.css" />
+    <script src="js/frontPage.js"></script>
      <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
 
 
@@ -17,21 +18,42 @@
         <h2 id="anchorDown"> anchor tf down</h2>
 
           <div id="buttonBackground"></div>
-
+          <% var userURI = <%=user_uri%> %>
          <div id="frontPageButton">
                  <div class="joinSessionButton">
-                     <button type="button">
+                     <button id="joinButton" type="button">
                        Join a Session
                      </button>
                  </div>
 
                 <div class="hostSessionButton">
-                        <button type="button">
+                        <button id="createButton" onclick="createJam(<%= user_uri%>)" type="button">
                             Host a Session
                      </button>
                 </div>
           </div>
      </div>
+<<<<<<< HEAD
+=======
+    
+     
+     
+   <div id="box">
+         Initial Content
+         <div class="hidden">   
+             This is hidden content
+        </div>
+     </div>
+ 
+ <script>
+        $(document).ready(function() {
+    $('#box').click(function() {
+        $(this).find(".hidden").toggleClass('open');
+    });
+});
+        </script>
+      
+>>>>>>> 0d565c0b81e7f6666ebf57115d528b5b06f9df6b
 
 	   <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
 	   <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
