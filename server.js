@@ -173,12 +173,13 @@ app.get('/join/:uniqueLink', function(req, res) {
             }
             other_users = [].concat(other_users);
             //select the host user
-            connection.query("SELECT user_name FROM user WHERE user_uri = '" + hosturi + "'", function(err, rows, fields) { //
+            connection.query("SELECT user_name, user_id FROM user WHERE user_uri = '" + hosturi + "'", function(err, rows, fields) { //
                 if (err) throw err;
                 var host = rows[0].user_name;
+                var hostid = rows[0].user_id;
                 var users = other_users.concat(host);
                 console.log(users);
-                res.render('session_page', {link: link, users:users, host_uri:hosturi});
+                res.render('session_page', {link: link, users:users, host_uri:hosturi, host_id:hostid});
             });
         });
     });
