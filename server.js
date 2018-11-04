@@ -97,7 +97,7 @@ app.get('/loggedin', function(req, res) {
 //input: userURI
 app.get('/create', function(req,res){
     //start a session in the database
-    connection.query("INSERT INTO jam(host) VALUES ('" + req.headers.useruri + "')"); //make session
+    connection.query("INSERT IGNORE INTO jam(host) VALUES ('" + req.headers.useruri + "')"); //make session
     connection.query("SELECT user_name AS name FROM user WHERE user_uri = '" + req.headers.useruri + "'", function(err, rows, fields) { //
         if (err) throw err;
 
