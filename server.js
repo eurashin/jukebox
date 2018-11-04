@@ -186,6 +186,37 @@ app.get('/join/:uniqueLink', function(req, res) {
 
 });
 
+
+app.get('/refresh', function(req,res) {
+    //find hosturi
+    var link = 'http://localhost:8080/join/' + req.params.uniqueLink;
+    console.log(link);
+    connection.query("SELECT host FROM jam WHERE jam.uniqueLink = '" +  link + "'", function(err, rows, fields ) {
+        hosturi = rows[0].host;
+        console.log(hosturi);
+        //handle rendering the temp page by ID
+        //select all the users in session
+        connection.query("SELECT DISTINCT user_name FROM user,joins,jam WHERE jam.host ='" +  hosturi +
+                "' AND user.user_uri = joins.user_uri", function(err, rows, fields) {
+            if (err) throw err;
+            var other_users = [];
+            for(var i=0; i<rows.length; i++) {
+                other_users.push(rows[i].user_name);
+            }
+            other_users = [].concat(other_users);
+            //select the host user
+            connection.query("SELECT user_name, user_id FROM user WHERE user_uri = '" + hosturi + "'", function(err, rows, fields) { //
+                if (err) throw err;
+                var host = rows[0].user_name;
+                var hostid = rows[0].user_id;
+                var users = other_users.concat(host);
+                console.log(users);
+                res.render('session_page', {link: link, users:users, host_uri:hosturi, host_id:hostid});
+            });
+        });
+    });
+});
+
 app.get('/destroy', function(req,res){
     //delete songs associated with users
     hosturi = req.headers.useruri;

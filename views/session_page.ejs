@@ -17,14 +17,12 @@
 
  <div id="buttonBackground"></div>
 
-<body onload= "createTable('<%=users%>');">
-
+ <body onload= "createTable('<%=users%>','<%=host_uri%>', '<%=link%>');">
  <div
  class="url_display" >
     <div style="font-size:10pt;">Your URL is:</div>
     <div style="font-size:18pt;"><%=link %></div>
  </div>
-
 
     <div class="myTabDiv" style="width:300px; position:25%;">
         <table id="userTable" style="width:300px; position:25%;  align=center";>
