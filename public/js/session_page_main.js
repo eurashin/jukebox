@@ -16,7 +16,7 @@ function createTable(testUsers){
 
 //reroutes to og
 function endSession(userUri) {
-    var website = "http://jukebox-node-8080.herokuapp.com/destroy";
+    var website = "http://localhost:8080/destroy";
 	//var website = "http://localhost:8080/destroy";
 	$.ajaxSetup({
 		headers: {
@@ -39,7 +39,7 @@ function endSession(userUri) {
 }
 
 function startSession(userUri, userId) {
-    var website = "http://jukebox-node-8080.herokuapp.com/session_start";
+    var website = "http://localhost:8080/session_start";
 	//var website = "http://localhost:8080/session_start";
 	$.ajaxSetup({
 		headers: {

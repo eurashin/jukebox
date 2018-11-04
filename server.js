@@ -21,7 +21,7 @@ var cookieParser = require('cookie-parser');
 var SpotifyWebApi = require('spotify-web-api-node');
 var client_id = '690951f82905419d8342d9f33e3e6227'; // Your client id
 var client_secret = 'bd8f410b044a4f16a17151c7d1c57601'; // Your secret
-var redirect_uri = 'http://jukebox-node-8080.herokuapp.com/callback'; // Your redirect uri
+var redirect_uri = 'http://localhost:8080/callback'; // Your redirect uri
 
 /**
  * Generates a random string containing numbers and letters
@@ -101,7 +101,7 @@ app.get('/loggedin', function(req, res) {
 app.get('/create', function(req,res) {
     //generate random string
     var randString = generateRandomString(5);
-    var link = 'http://jukebox-node-8080.herokuapp.com/join/' + randString;
+    var link = 'http://localhost:8080/join/' + randString;
 
     //start a session in the database
     connection.query("INSERT IGNORE INTO jam(uniqueLink, host) VALUES ('" + link + "','"+ req.headers.useruri + "')"); //make session
@@ -155,7 +155,7 @@ app.get('/session_start', function(req,res) {
 //called when "join a session" button is pressed
 app.get('/join/:uniqueLink', function(req, res) {
     //find hosturi
-    var link = 'http://jukebox-node-8080.herokuapp.com/join/' + req.params.uniqueLink;
+    var link = 'http://localhost:8080/join/' + req.params.uniqueLink;
     console.log(link);
     connection.query("SELECT host FROM jam WHERE jam.uniqueLink = '" +  link + "'", function(err, rows, fields ) {
         hosturi = rows[0].host;
