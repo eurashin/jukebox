@@ -2,6 +2,7 @@
     var users = $.ajax({url:"url"})
 } */
 
+var interval;
 function createTable(testUsers, userUri, link){
     var testSplit = testUsers.split(',')
     var users= [].concat(testSplit);
@@ -14,11 +15,11 @@ function createTable(testUsers, userUri, link){
         cell.innerHTML = users[i];
     }
     
-    refresh(userUri, link); 
 }
 
 //reroutes to og
 function endSession(userUri) {
+    clearTimeout(interval);
     var website = "http://localhost:8080/destroy";
 	//var website = "http://localhost:8080/destroy";
 	$.ajaxSetup({
@@ -42,6 +43,7 @@ function endSession(userUri) {
 }
 
 function startSession(userUri, userId) {
+    clearTimeout(interval);
     var website = "http://localhost:8080/session_start";
 	//var website = "http://localhost:8080/session_start";
 	$.ajaxSetup({
@@ -69,7 +71,6 @@ function startSession(userUri, userId) {
 
 
 function refresh(userUri, website){
-    window.setTimeout(refresh(userUri, link), 15000);
     $.ajaxSetup({
         headers: {
             useruri:userUri,
