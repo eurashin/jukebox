@@ -141,7 +141,7 @@ app.get('/session_start', function(req,res) {
 					console.log("song uris = " + JSON.stringify(array));
 
 					// add playlist, array is json of song uris
-					spotifyApi.addTracksToPlaylist(user, playlist, JSON.stringify(array));
+					spotifyApi.addTracksToPlaylist(user, playlist, JSON.stringify(array))
 					.then(function(data) {
 						console.log("Added tracks to the playlist");
 					}).catch(function(err) {
