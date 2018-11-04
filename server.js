@@ -140,21 +140,33 @@ app.get('/session_start', function(req,res) {
 });
 
 //called when "join a session" button is pressed
-app.post('/join/:hosturi', function(req, res) {
-    //add user to session
-    connection.query("INSERT INTO joins(host_uri, user_uri) VALUES ('" + req.params.hosturi + "','" + req.headers.useruri + "')");
-    //handle rendering the temp page by ID
-    var link = '/join/' + req.params.hosturi;
-    //select all the users in session
-    connection.query("SELECT DISTINCT user_name FROM user,joins,jam WHERE jam.host ='" +  req.params.hosturi +
-            "' AND user.user_uri = joins.user_uri", function(err, rows, fields) {
-        if (err) throw err;
-        var other_users = rows;
-        //select the host user
-        connection.query("SELECT user_name FROM user WHERE user_uri = '" + req.params.hosturi + "'", function(err, rows, fields) { //
+app.get('/join/:uniqueLink', function(req, res) {
+    //find hosturi
+    var link = 'https://jukebox-node-8080.herokuapp.com/join/' + req.params.uniqueLink;
+    console.log(link);
+    connection.query("SELECT host FROM jam WHERE jam.uniqueLink = '" +  link + "'", function(err, rows, fields ) {
+        hosturi = rows[0].host;
+        console.log(hosturi);
+        //add user to session
+        connection.query("INSERT INTO joins(host_uri, user_uri) VALUES ('" + hosturi + "','" + req.headers.useruri + "')");
+        //handle rendering the temp page by ID
+        //select all the users in session
+        connection.query("SELECT DISTINCT user_name FROM user,joins,jam WHERE jam.host ='" +  hosturi +
+                "' AND user.user_uri = joins.user_uri", function(err, rows, fields) {
             if (err) throw err;
-            var host = rows[0].user_name;
-            res.render('session_page', {link: link, users:host.concat(other_users)});
+            var other_users = [];
+            for(var i=0; i<rows.length; i++) {
+                other_users.push(rows[i].user_name);
+            }
+            other_users = [].concat(other_users); 
+            //select the host user
+            connection.query("SELECT user_name FROM user WHERE user_uri = '" + hosturi + "'", function(err, rows, fields) { //
+                if (err) throw err;
+                var host = rows[0].user_name;
+                var users = other_users.concat(host); 
+                console.log(users); 
+                res.render('session_page', {link: link, users:users});
+            });
         });
     });
 
