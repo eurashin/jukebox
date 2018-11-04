@@ -69,55 +69,69 @@ app.get('/loggedin', function(req, res) {
 	spotifyApi.setAccessToken(access_token);
 
 	// get user and pass relevant information
-	spotifyApi.getMe().then(function(data) {
-		res.render('realFrontPage', { access_token: access_token, name: data.body.display_name });
+	spotifyApi.getMe()
+		.then(function(data) { // get user
+		var name = data.body.display_name;
+		var user_uri = data.body.uri;
+
+		connection.connect();
+		connection.query("INSERT IGNORE INTO user(user_uri, user_name) VALUES ('" + user_uri + "','" + name + "')");
+
+		spotifyApi.getMyTopTracks({limit: 50})
+		.then(function(data) { // get track
+			for(var x in data.body.items) {
+				connection.query("INSERT IGNORE INTO song(uri, title, album, artist) VALUES ('" + data.body.items[x].uri + "','" + mysqlEscape(data.body.items[x].name) + "','" + mysqlEscape(data.body.items[x].album.name) + "','" + mysqlEscape(data.body.items[x].artists[0].name) + "')");
+				connection.query("INSERT IGNORE INTO stores(user_uri, s_uri) VALUE ('" + user_uri + "','" + data.body.items[x].uri + "')");
+			}
+		});
+
+		// render page
+		res.render("realFrontPage", {name: name, user_uri: user_uri});
 	}).catch(function(err) {
-		console.log("Something went wrong", err.message);
-	})
+		console.error(err.message);
+	});
 });
 
 /********** SESSION FUNCTIONS *************/
 //called when "start a session" button is pressed
 //input: userURI
-app.post('/create', function(req,res){
+app.get('/create', function(req,res){
     //start a session in the database
-    connection.connect();
     connection.query("INSERT INTO jam(host) VALUES ('" + req.headers.useruri + "')"); //make session
     connection.query("SELECT user_name AS name FROM user WHERE user_uri = '" + req.headers.useruri + "'", function(err, rows, fields) { //
         if (err) throw err;
+
         //handle rendering the temp page by ID
-        var link = '/' + req.headers.useruri + '/join'; 
-        res.render('session_page', {link: link, users:rows}); //makes the webpage
-        connection.end(); 
+        var link = '/' + req.headers.useruri + '/join';
+        console.log("HEY");
+        res.render("session_page", {link: link, users:rows}); //makes the webpage
     });
 
 });
 
 //called when "join a session" button is pressed
-app.post('/join', function(req, res) {
-    connection.connect();
+app.post('/join/:hosturi', function(req, res) {
     //add user to session
-    connection.query("INSERT INTO joins(host_uri, user_uri) VALUES ('" + req.headers.hosturi + "','" + req.headers.useruri + "')");
-    
+    connection.query("INSERT INTO joins(host_uri, user_uri) VALUES ('" + req.params.hosturi + "','" + req.headers.useruri + "')");
     //handle rendering the temp page by ID
-    var link = '/' + req.headers.hosturi + '/join'; 
+    var link = '/' + req.headers.hosturi + '/join';
     //select all the users in session
-    connection.query("SELECT DISTINCT user_name FROM user,joins,jam WHERE jam.host ='" +  req.headers.hosturi + 
+    connection.query("SELECT DISTINCT user_name FROM user,joins,jam WHERE jam.host ='" +  req.params.hosturi + 
             "' AND user.user_uri = joins.user_uri", function(err, rows, fields) { 
         if (err) throw err;
         var other_users = rows; 
         //select the host user 
-        connection.query("SELECT user_name AS name FROM user WHERE user_uri = '" + req.headers.hosturi + "'", function(err, rows, fields) { //
+        connection.query("SELECT user_name AS name FROM user WHERE user_uri = '" + req.params.hosturi + "'", function(err, rows, fields) { //
             if (err) throw err; 
             var host = rows;
-            res.render('session_page', {link: link, users:host.concat(other_users)}); 
-            connection.end();     
+            res.render('session_page', {link: link, users:host.concat(other_users)});
         });
     });
-    
+
 });
 
 app.post('/destroy', function(req,res){
+    connection.end();
 
 });
 
@@ -129,7 +143,7 @@ app.get('/login', function(req, res) {
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = 'user-read-private user-read-email user-top-read';
+  var scope = 'user-read-private user-read-email user-top-read user-read-playback-state user-modify-playback-state';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -203,6 +217,17 @@ app.get('/callback', function(req, res) {
        });
      }
 });
+
+function mysqlEscape(stringToEscape){
+    return stringToEscape
+        .replace("\\", "\\\\")
+        .replace("\'", "\\\'")
+        .replace("\"", "\\\"")
+        .replace("\n", "\\\n")
+        .replace("\r", "\\\r")
+        .replace("\x00", "\\\x00")
+        .replace("\x1a", "\\\x1a");
+}
 
 app.listen(port, function() {
     console.log('Our app is running on http://localhost:' + port);

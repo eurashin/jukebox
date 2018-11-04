@@ -2,6 +2,12 @@
     text-align: center;
 }
 
+body{
+    font-family:"Arial", monospace;
+    color:white;
+    font-weight:bold;
+}
+
 #tagline{
     font-family: "Raleway", sans-serif;
 }
@@ -18,31 +24,29 @@
     width: 50%;
    height: 25%;
     text-align: center;
-    background-color: antiquewhite; 
-    opacity: .5;}
+}
 
 
 
     button {
-        background-color: rgb(172, 66, 5);
-        color: white;
+        font-size:12pt;
+        background-image: url("img/coin.png");
+        background-repeat: no-repeat;
+        background-size:cover;
+        background-position:center;
         padding: 2%;
-       
         border: none;
         cursor: pointer;
-        width: 40%;
+        border-radius:100%;
+        width: 140px;
+        height:140px;
         margin: 5%;
         
     }
     
-    button:hover {
-        background-color: rgb(172, 82, 30);
-    }
-    
-
 #frontPageButton{ 
     position: fixed;
-    left: 25%;
+    left: 12%;
     top: 42%;
     width: 50%;
     text-align: center;
@@ -58,9 +62,10 @@
 }
 
 body {
-    background-image: url('img/frontPagePic.jpg');
+    background-image: url('img/wall.jpg');
     background-repeat: no-repeat;
     background-position: center;
+    background-color:(0,0,0,0);
     background-size: cover;
     background-attachment: fixed;
 }
