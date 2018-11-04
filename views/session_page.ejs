@@ -7,36 +7,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!--custom files-->
-    <link rel="stylesheet" href="css/session_page.css">
+    <link rel="stylesheet" href="css/frontPageStyle.css">
+    <link rel='shortcut icon' type='image/x-icon' href='css/img/favicon.ico' />
     <script src="js/session_page_main.js"></script>
     
     <!--jQuery & jQueryUI--> 
     <script src="js/jquery-3.3.1.min.js"></script>
 </head>
 
-<style>
-    body,h1 {font-family: "Raleway", sans-serif}
-    body, html {height: 100%}
-</style>
+ <div id="buttonBackground"></div>
 
-<body onload= "createTable(<%=users%>);">
+<body onload= "createTable('<%=users%>');">
 
-    <div class="url_display">
-        Your URL is: <%=link %>
-    </div>
+ <div 
+ class="url_display" >
+    <div style="font-size:10pt;">Your URL is:</div> 
+    <div style="font-size:18pt;"><%=link %></div>
+ </div> 
+    
 
     <div class="myTabDiv">
         <table id="userTable" style="width:100%">
         <tr>
             <th>Users in session</th>
         </tr>
-        <tr style="text-align:right">
         </table>
     </div>
 
     <div class="buttons">
         <div id="startButton">
-        <button type="submit"> Start </button>
+        <button type="submit"> Play </button>
         </div>
     </div>
 

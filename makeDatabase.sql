@@ -12,9 +12,9 @@ CREATE TABLE user
 
 CREATE TABLE jam
 	(
-	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	uniqueLink VARCHAR(200) NOT NULL PRIMARY KEY,
 	host VARCHAR(100) NOT NULL,
-    FOREIGN KEY (host) REFERENCES user(user_uri)
+     FOREIGN KEY (host) REFERENCES user(user_uri)
 	);
 
 CREATE TABLE song
@@ -39,8 +39,7 @@ CREATE TABLE stores
 (
     user_uri VARCHAR(100) NOT NULL,
     s_uri VARCHAR(100) NOT NULL,
-    PRIMARY KEY (user_uri, s_uri),
-
+    PRIMARY KEY (user_uri, s_uri), 
     FOREIGN KEY (s_uri) REFERENCES song(uri),
     FOREIGN KEY (user_uri) REFERENCES user(user_uri)
 );

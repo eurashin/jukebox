@@ -1,0 +1,75 @@
+body {
+    background-image: radial-gradient(silver 5%,black);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.text {padding: 2.5%;}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: .5%;
+}
+
+nav ul{ height: 125px; width:10%;}
+nav ul{overflow:hidden; overflow-y:scroll;}
+
+#songDetails {
+    position: fixed;
+    top: 10%;
+    left: 25%;
+    width:50%;
+    height:50%;
+}
+
+#backgroundShade {
+    width:25%;
+    height:38%;
+    position: fixed;
+    background-color: grey;
+    opacity: 0.15;
+}
+
+#contentWrapper {
+    margin: auto;
+    width: 50%;
+    text-align: center;
+    border: 3px solid black;
+}
+
+#musicWrapper {
+    padding:2.5%;
+}
+
+#picture {
+    width: 50%;
+    height: 50%;
+    border-style: solid;
+    border-width: 3px;
+}
+
+#playlist {
+    position: fixed;
+    width: auto;
+    top: 75%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-collapse: collapse;
+    border: 2px solid black;
+}
+
+li {
+    display: block;
+    color: #000;
+    padding: 6px 16px;
+    text-decoration: none;
+}
+
+/* Change the link color on hover */
+li:hover {
+    background-color: #555;
+    color: white;
+}
+

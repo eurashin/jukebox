@@ -146,9 +146,9 @@ app.post('/join/:hosturi', function(req, res) {
         if (err) throw err;
         var other_users = rows;
         //select the host user
-        connection.query("SELECT user_name AS name FROM user WHERE user_uri = '" + req.params.hosturi + "'", function(err, rows, fields) { //
+        connection.query("SELECT user_name FROM user WHERE user_uri = '" + req.params.hosturi + "'", function(err, rows, fields) { //
             if (err) throw err;
-            var host = rows;
+            var host = rows[0].user_name;
             res.render('session_page', {link: link, users:host.concat(other_users)});
         });
     });
