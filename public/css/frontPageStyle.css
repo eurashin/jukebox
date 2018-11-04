@@ -71,29 +71,3 @@ body {
     background-attachment: fixed;
 }
 
-#box {
-    height:auto;
-    left:25%;
-    width: 40%;
-    background:#000;
-    color:#fff;
-    cursor:pointer;
-}
-
-.hidden {
-    height: 0px;
-    -webkit-transition: height 0.5s linear;
-       -moz-transition: height 0.5s linear;
-        -ms-transition: height 0.5s linear;
-         -o-transition: height 0.5s linear;
-            transition: height 0.5s linear;
-}
-
-.hidden.open {
-     height: 200px;
-     -webkit-transition: height 0.5s linear;
-        -moz-transition: height 0.5s linear;
-         -ms-transition: height 0.5s linear;
-          -o-transition: height 0.5s linear;
-             transition: height 0.5s linear;
-}
