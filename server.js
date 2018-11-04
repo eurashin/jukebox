@@ -98,17 +98,18 @@ app.get('/loggedin', function(req, res) {
 //called when "start a session" button is pressed
 //input: useruri
 app.get('/create', function(req,res) {
-	//generate random string
+    //generate random string
     var randString = generateRandomString(5);
     var link = 'https://jukebox-node-8080.herokuapp.com/join/' + randString;
+
     //start a session in the database
-    connection.query("INSERT INTO jam(uniqueLink, host) VALUES ('" + link + "','" + req.headers.useruri + "')"); //make session
+    connection.query("INSERT IGNORE INTO jam(uniqueLink, host) VALUES ('" + link + "','"+ req.headers.useruri + "')"); //make session
     connection.query("SELECT user_name FROM user WHERE user_uri = '" + req.headers.useruri + "'", function(err, rows, fields) { //
         if (err) throw err;
 
-	   console.log(req.headers.useruri);
+        //handle rendering the temp page by ID
+        console.log(req.headers.useruri);
         var users = [].concat([rows[0].user_name]);
-        console.log(users);
         res.render("session_page", {link: link, users:users}); //makes the webpage
     });
 });
