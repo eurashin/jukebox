@@ -14,3 +14,14 @@ function createList(queue){
         $("#playlist").append("<li>" + queue[i] + "</li>");
     }
 }
+
+function getCurrentTrack() {
+
+}
+
+
+function onLoad() {
+    window.setInterval(function() {
+         
+    }, 5000);   
+}

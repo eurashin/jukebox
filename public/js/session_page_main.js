@@ -4,7 +4,9 @@
 
 
 function createTable(testUsers){
-    var users= [].concat(testUsers);
+    var testSplit = testUsers.split(',')
+    var users= [].concat(testSplit);
+    console.log(users);
     var table = document.getElementById('userTable');  
     console.log(users); 
     for(let i = 0; i < users.length; i++){

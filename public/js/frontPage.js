@@ -47,8 +47,8 @@ function startSession(userUri, userId) {
 }
 
 function joinJam(userUri) {
-    var website = $('#inputField').val();
-
+    var website = $('#jamNameInput').val();
+    console.log(website);
     $.ajaxSetup({
         headers: {
             useruri:userUri,
