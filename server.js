@@ -21,7 +21,7 @@ var cookieParser = require('cookie-parser');
 var SpotifyWebApi = require('spotify-web-api-node');
 var client_id = '690951f82905419d8342d9f33e3e6227'; // Your client id
 var client_secret = 'bd8f410b044a4f16a17151c7d1c57601'; // Your secret
-var redirect_uri = 'https://jukebox-node-8080.herokuapp.com/callback'; // Your redirect uri
+var redirect_uri = 'https://jukebox-node-8080.herokuapp.com:8080/callback'; // Your redirect uri
 
 /**
  * Generates a random string containing numbers and letters
