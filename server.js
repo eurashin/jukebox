@@ -116,14 +116,14 @@ app.get('/create', function(req,res) {
 
 //input
 app.get('/session_start', function(req,res) {
-	spotifyApi.setAccessToken(access_token);
 	console.log("hostURI = " + req.headers.useruri);
-	spotifyApi.createPlaylist(req.headers.userid, 'jukebox', { 'public' : false })
+	spotifyApi.createPlaylist(req.headers.userid, 'jukebox', { 'public' : true })
 	.then(function(data) {
 		// dependent upon radio button selection for method of constructing playlist
 		var playlist = data.body.id;
 		// select the users in this session
-		connection.query("SELECT user_id FROM joins, user WHERE host_uri = '" + req.headers.useruri + "'",
+		connection.query("SELECT user_id FROM joins, user WHERE host_uri = '" + req.headers.useruri + "' "
+			+ "AND joins.user_uri = user.user_uri",
 		function(err, rows, fields) {
             console.log(rows);
             //make list of users, append host user
