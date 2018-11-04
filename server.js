@@ -116,16 +116,17 @@ app.get('/create', function(req,res) {
 
 //input
 app.get('/session_start', function(req,res) {
-	spotifyApi.setAccessToken(access_token);
 	console.log("hostURI = " + req.headers.useruri);
-	spotifyApi.createPlaylist(req.headers.userid, 'jukebox', { 'public' : false })
+	spotifyApi.createPlaylist(req.headers.userid, 'jukebox', { 'public' : true })
 	.then(function(data) {
 		// dependent upon radio button selection for method of constructing playlist
 		var playlist = data.body.id;
 		// select the users in this session
-		connection.query("SELECT user_id FROM joins, user WHERE host_uri = '" + req.headers.useruri + "'",
+		connection.query("SELECT user_id FROM joins, user WHERE host_uri = '" + req.headers.useruri + "' "
+			+ "AND joins.user_uri = user.user_uri",
 		function(err, rows, fields) {
 			for(x in rows) {
+				console.log(rows[0]);
 				var user = rows[x].user_id;
 				// select the songs associated with this user
 				connection.query("SELECT s_uri FROM stores WHERE user_uri = 'spotify:user:" + rows[x].user_id + "'", function(err, rows, fields) {
@@ -141,7 +142,7 @@ app.get('/session_start', function(req,res) {
 					console.log("song uris = " + JSON.stringify(array));
 
 					// add playlist, array is json of song uris
-					spotifyApi.addTracksToPlaylist(user, playlist, JSON.stringify(array));
+					spotifyApi.addTracksToPlaylist(user, playlist, JSON.stringify(array))
 					.then(function(data) {
 						console.log("Added tracks to the playlist");
 					}).catch(function(err) {
