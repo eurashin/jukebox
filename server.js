@@ -75,8 +75,6 @@ app.get('/loggedin', function(req, res) {
 		console.log("Something went wrong", err.message);
 	})
 });
-/************** UPDATE THE DATABASE **********/
-
 
 /********** SESSION FUNCTIONS *************/
 //called when "start a session" button is pressed
